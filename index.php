@@ -53,6 +53,8 @@
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
+	define('SITE', isset($_SERVER['PLANT_SITE']) ? $_SERVER['PLANT_SITE'] : 'development');
+
 	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 
 /*

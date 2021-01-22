@@ -75,11 +75,11 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'ananti',
-	'dbdriver' => 'mysqli',
+	'hostname' => getenv('ENV_DB_HOST'),
+	'username' => getenv('ENV_DB_USERNAME'),
+	'password' => getenv('ENV_DB_PASSWORD'),
+	'database' => getenv('ENV_DB_DATABASE'),
+	'dbdriver' => getenv('ENV_DB_CONNECTION'),
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
