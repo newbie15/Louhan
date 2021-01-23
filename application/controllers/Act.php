@@ -20,30 +20,68 @@ class Act extends CI_Controller {
 	 */
 	public function index()
 	{
-		$query = $this->db->query("SELECT nama FROM master_karyawan WHERE id_pabrik = 'SDI1' ORDER BY nama ASC;");
+		$query = $this->db->query("SELECT nama FROM master_pabrik;");
+
+		$output['dropdown_pabrik'] = "";
+
+		foreach ($query->result() as $row) {
+			$output['dropdown_pabrik'] = $output['dropdown_pabrik'] . "<option>" . $row->nama . "</option>";
+		}
+		$output['dropdown_pabrik'] .= "/<select>";
+
 
 		$kategori = 0;
 		$nama_mpp = "";
 
-		$output['dropdown_mpp']= "";
-		if($kategori<2){
-			$output['dropdown_mpp']= "<select id=\"mpp\"><option>--PILIH SALAH SATU--</option>";
-		}else{
-			$output['dropdown_mpp']= "<select id=\"mpp\" disabled>";
+		$output['dropdown_mpp'] = "";
+		if ($kategori < 2) {
+			$output['dropdown_mpp'] = "<select id=\"mpp\"><option>--PILIH SALAH SATU--</option>";
+		} else {
+			$output['dropdown_mpp'] = "<select id=\"mpp\" disabled>";
 		}
-		
-		foreach ($query->result() as $row)
-		{
-			if($nama_mpp==$row->nama){
-				$output['dropdown_mpp'] = $output['dropdown_mpp']."<option selected=\"selected\">".$row->nama."</option>";
-			}else{
-				$output['dropdown_mpp'] = $output['dropdown_mpp']."<option>".$row->nama."</option>";
+
+		foreach ($query->result() as $row) {
+			if ($nama_mpp == $row->nama) {
+				$output['dropdown_mpp'] = $output['dropdown_mpp'] . "<option selected=\"selected\">" . $row->nama . "</option>";
+			} else {
+				$output['dropdown_mpp'] = $output['dropdown_mpp'] . "<option>" . $row->nama . "</option>";
 			}
 		}
 		$output['dropdown_mpp'] .= "/<select>";
 
+
 		$this->load->view('welcome_message',$output);
 	}
+
+	public function load_mpp(){
+		$id_pabrik = $_POST['id_pabrik'];
+
+		$query = $this->db->query("SELECT nama FROM master_karyawan WHERE id_pabrik = '$id_pabrik' ORDER BY nama ASC;");
+
+		$kategori = 0;
+		$nama_mpp = "";
+
+		$output['dropdown_mpp'] = "<option>--PILIH SALAH SATU--</option>";
+		// if ($kategori < 2) {
+		// 	$output['dropdown_mpp'] = "<select id=\"mpp\"><option>--PILIH SALAH SATU--</option>";
+		// } else {
+		// 	$output['dropdown_mpp'] = "<select id=\"mpp\" disabled>";
+		// }
+
+		foreach ($query->result() as $row) {
+			// if ($nama_mpp == $row->nama) {
+			// 	$output['dropdown_mpp'] = $output['dropdown_mpp'] . "<option selected=\"selected\">" . $row->nama . "</option>";
+			// } else {
+				$output['dropdown_mpp'] = $output['dropdown_mpp'] . "<option>" . $row->nama . "</option>";
+			// }
+		}
+		// $output['dropdown_mpp'] .= "/<select>";
+
+		echo $output['dropdown_mpp'];
+
+
+	}
+
 
 	public function load(){
 		$id_pabrik = $_REQUEST['id_pabrik'];
@@ -78,7 +116,6 @@ class Act extends CI_Controller {
 		if($nm>0){
 			echo json_encode($d);
 		}else{
-
 			$query = $this->db->query("SELECT * FROM m_planing WHERE
 			id_pabrik = '$id_pabrik' AND tanggal = '$tanggal' AND nama_mpp LIKE '%$mpp%'
 			");

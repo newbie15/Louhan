@@ -20,6 +20,17 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('welcome_message');
+
+		$query = $this->db->query("SELECT nama FROM master_pabrik;");
+
+		$output['dropdown_pabrik'] = "";
+
+		foreach ($query->result() as $row) {
+			$output['dropdown_pabrik'] = $output['dropdown_pabrik'] . "<option>" . $row->nama . "</option>";
+		}
+		$output['dropdown_pabrik'] .= "/<select>";
+
+		$this->load->view('login',$output);
+
 	}
 }

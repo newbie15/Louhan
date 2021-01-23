@@ -7,7 +7,7 @@ $(document).ready(function(){
     new customAlert();
 
     function station_refresh() {
-        $("#station").load(BASE_URL + "act/station_ajax_dropdown/" + $("#pabrik").val(),
+        $("#station").load(BASE_URL + "station_ajax_dropdown/" + $("#pabrik").val(),
             function (responseTxt, statusTxt, xhr) {
                 if (statusTxt == "success") {
                     unit_refresh();
@@ -18,7 +18,7 @@ $(document).ready(function(){
     }
 
     function unit_refresh() {
-        $("#unit").load(BASE_URL + "act/unit_ajax_dropdown_sub/" + $("#pabrik").val() + "/" + encodeURI($("#station").val()),
+        $("#unit").load(BASE_URL + "unit_ajax_dropdown_sub/" + $("#pabrik").val() + "/" + encodeURI($("#station").val()),
             function (responseTxt, statusTxt, xhr) {
                 if (statusTxt == "success") {
                     sub_unit_refresh();
@@ -29,7 +29,7 @@ $(document).ready(function(){
     }
 
     function sub_unit_refresh() {
-        $("#sub_unit").load(BASE_URL + "act/sub_unit_ajax_dropdown/" + $("#pabrik").val() + "/" + encodeURI($("#station").val()+ "/" + ($("#unit").val())),
+        $("#sub_unit").load(BASE_URL + "sub_unit_ajax_dropdown/" + $("#pabrik").val() + "/" + encodeURI($("#station").val()+ "/" + ($("#unit").val())),
             function (responseTxt, statusTxt, xhr) {
                 if (statusTxt == "success") {
                 } else {
@@ -143,7 +143,7 @@ $(document).ready(function(){
     	}else{
 	        $.ajax({
 	            method: "POST",
-	            url: BASE_URL + "act/load",
+	            url: BASE_URL + "load",
 	            data: {
 	                id_pabrik: $("#pabrik").val(),
 	                // id_station: $("#station").val(),
@@ -214,6 +214,7 @@ $(document).ready(function(){
     }	
 
     $("#pabrik").change(function(){
+        reload_mpp();
         station_refresh();
     });
 
@@ -268,7 +269,7 @@ $(document).ready(function(){
         if(y==0){
             $.ajax({
                 method: "POST",
-                url: BASE_URL + "act/simpan",
+                url: BASE_URL + "simpan",
                 data: {
                     id_pabrik: $("#pabrik").val(),
                     // id_station: $("#station").val(),
@@ -394,6 +395,27 @@ $(document).ready(function(){
 
     });
 
-	ajax_refresh();
+    function reload_mpp() {
+        $.ajax({
+            method: "POST",
+            url: BASE_URL + "load_mpp",
+            data: {
+                id_pabrik: $("#pabrik").val(),
+            }
+        }).done(function (msg) {
+            // console.log(msg);
+            $("#mpp").html(msg);
+            $("#mpp").val("--PILIH SALAH SATU--");
+        });             
+    }
 
+
+
+    ajax_refresh();
+    
+    console.log(document.cookie);
+    if(document.cookie!=undefined){
+        $("#pabrik").val(document.cookie);
+        reload_mpp()
+    }
 });
